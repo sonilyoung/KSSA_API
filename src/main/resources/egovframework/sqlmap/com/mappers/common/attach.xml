@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.com.file.dao.FileDAO">
+
+	
+	<!-- 이미지 파일 path 조회 -->
+	<select id="selectFile" parameterType="egovframework.com.file.vo.AttachFile" 
+		resultType="egovframework.com.file.vo.AttachFile">
+		SELECT
+			ATTACH_FILE_ID,
+			FILE_SN,
+			FILE_TARGET,
+			ORIGINAL_FILENAME,
+			SAVE_FILENAME,
+			FILE_PATH,
+			FILE_EXT,
+			FILE_SIZE,
+			INSERT_DATE,
+			INSERT_ID        
+		FROM KSSA_ATTACH_FILE  
+		WHERE ATTACH_FILE_ID = #{attachFileId}
+		AND FILE_TARGET = #{fileTarget}
+		AND FILE_SN = #{fileSn}
+	</select>
+	
+	<!-- 이미지 파일 path 조회 -->
+	<select id="selectFileAll" parameterType="egovframework.com.file.vo.AttachFile" 
+		resultType="egovframework.com.file.vo.AttachFile">
+		SELECT
+			ATTACH_FILE_ID,
+			FILE_SN,
+			FILE_TARGET,
+			ORIGINAL_FILENAME,
+			SAVE_FILENAME,
+			FILE_PATH,
+			FILE_EXT,
+			FILE_SIZE,
+			INSERT_DATE,
+			INSERT_ID         
+		FROM KSSA_ATTACH_FILE  
+		WHERE FILE_TARGET = #{fileTarget}
+	</select>	
+	
+	<!-- 첨부 파일 상세 정보 생성 -->
+	<insert id="insertFile"
+            parameterType="egovframework.com.file.vo.AttachFile" useGeneratedKeys="true" keyProperty="attachFileId">
+            INSERT INTO KSSA_ATTACH_FILE (
+				FILE_SN
+				, FILE_PATH
+				, SAVE_FILENAME
+				, ORIGINAL_FILENAME
+				, FILE_EXT
+				, FILE_SIZE
+				, FILE_TARGET
+				, INSERT_DATE
+				, INSERT_ID
+            ) VALUES (
+				#{fileSn}
+				, #{filePath}
+				, #{saveFileName}
+				, #{originalFileName}
+				, #{fileExt}
+				, #{fileSize}
+				, #{fileTarget}
+				, now()
+				, #{insertId}
+            )
+	</insert>
+	
+	<!-- 첨부 파일 정보 삭제 -->
+	<delete id="deleteFile" parameterType="egovframework.com.file.vo.AttachFile">
+		DELETE FROM KSSA_ATTACH_FILE WHERE ATTACH_FILE_ID = #{attachFileId}
+	</delete>
+	
+	<!-- 첨부 파일 아이디에 해당하는 상세 정보 모두 삭제 -->
+	<delete id="deleteFileAll" parameterType="egovframework.com.file.vo.AttachFile">
+		DELETE FROM KSSA_ATTACH_FILE WHERE FILE_TARGET = #{fileTarget}
+	</delete>
+	
+
+	
+</mapper>

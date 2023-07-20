@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.com.user.contents.dao.MainDAO">
+	
+	<!-- 공지사항 가져오기 -->
+	<select id="selectNoticeList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_NOTICE
+		WHERE 1=1
+		<choose>
+			<when test='command == "title"'>
+				AND TITLE LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>
+			<when test='command == "contents"'>
+				AND CONTENTS LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>		
+			<when test='command == "all"'>
+				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
+			</when>									
+		</choose>		
+		
+	</select>	
+	
+	<!-- 공지사항 상세 -->
+	<select id="selectNotice" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+			, LANGUAGE_CODE
+		FROM KSSA_NOTICE
+		WHERE SEQ_ID = #{seqId}
+	</select>		
+	
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice" parameterType="egovframework.com.adm.system.vo.Board" useGeneratedKeys="true" keyProperty="seqId">
+		INSERT INTO KSSA_NOTICE
+		(
+			TITLE
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			
+		)
+		VALUES(
+			#{title}
+			,#{contents}
+			,#{userName}
+			,#{insertId}
+			,now()
+		)	
+	</insert>	
+	
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_NOTICE
+		SET 
+			TITLE = #{title}
+			, CONTENTS = #{title}
+			, USER_NAME = #{userName}
+			, UPDATE_ID = #{updateId}
+			, UPDATE_DATE = now()
+		WHERE SEQ_ID = #{seqId} 
+	</update>	
+	
+	<!-- 공지사항 삭제-->
+	<delete id="deleteNotice" parameterType="egovframework.com.adm.system.vo.Board">
+		DELETE FROM KSSA_NOTICE WHERE SEQ_ID = #{seqId}  
+	</delete>	
+	
+</mapper>

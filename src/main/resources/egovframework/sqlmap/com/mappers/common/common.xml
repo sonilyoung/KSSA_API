@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.com.common.dao.CommonDAO">
+
+	
+	<!-- 시퀀스 -->
+	<select id="selectSeq" parameterType="egovframework.com.common.vo.Common" resultType="egovframework.com.common.vo.Common" >	
+		<choose>
+			<when test='seqInfo == "NOTICE"'>
+				SELECT MAX(SEQ_ID) as seqId FROM KSSA_NOTICE
+			</when>		
+			<when test='seqInfo == "FAQ"'>
+				SELECT MAX(FAQ_ID) as seqId FROM KSSA_FAQ
+			</when>
+			<when test='seqInfo == "INFO"'>
+				SELECT MAX(INFO_ID) as seqId FROM KSSA_INFO
+			</when>			
+		</choose>				
+	</select>			
+</mapper>

@@ -1,0 +1,9 @@
+/target/
+
+# ignore all .class files
+*.class
+/.classpath
+/.factorypath
+/.project
+/.settings/
+/.springBeans
