@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.adm.login.service.LoginService;
+import egovframework.com.adm.login.vo.Login;
 import egovframework.com.adm.system.vo.Board;
 import egovframework.com.file.service.FileService;
 import egovframework.com.file.service.FileStorageService;
@@ -31,7 +32,6 @@ import egovframework.com.global.http.BaseResponse;
 import egovframework.com.global.http.BaseResponseCode;
 import egovframework.com.global.http.exception.BaseException;
 import egovframework.com.user.contents.service.MainService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -100,7 +100,14 @@ public class MainController {
 		
 		try {
 			//공지사항조회
-	        return new BaseResponse<Board>(mainService.selectNotice(params));
+			mainService.updateNoticeHitCnt(params);
+			Board result = mainService.selectNotice(params);
+			AttachFile attachFile = new AttachFile();
+			attachFile.setFileTarget(params.getSeqId());
+			List<AttachFile> fList = fileService.selectFileAll(attachFile);
+			result.setFileList(fList);
+			
+	        return new BaseResponse<Board>(result);
         } catch (Exception e) {
         	LOGGER.error("error:", e);
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
@@ -127,6 +134,12 @@ public class MainController {
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
 		
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
         List<AttachFile> saveFiles = null;
         
 		if(StringUtils.isEmpty(params.getTitle())){				
@@ -137,9 +150,9 @@ public class MainController {
 			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
 		}
 		
-		if(StringUtils.isEmpty(params.getInsertId())){				
-			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "InsertId" + BaseApiMessage.REQUIRED.getCode());
-		}					
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}			
 		
 		
 		//공지사항등록
@@ -160,7 +173,7 @@ public class MainController {
             fileService.insertFile(saveFiles);            
         }
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setAttachFile(resultFile);
+        params.setFileList(resultFile);
         
 		if(result > 0) {
 			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
@@ -188,7 +201,14 @@ public class MainController {
             @RequestPart(value = "files", required = false) MultipartFile files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
-		
+ 
+    	
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
         List<AttachFile> saveFiles = null;
         
 		if(StringUtils.isEmpty(params.getSeqId())){				
@@ -203,10 +223,9 @@ public class MainController {
 			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
 		}
 		
-		if(StringUtils.isEmpty(params.getInsertId())){				
-			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "InsertId" + BaseApiMessage.REQUIRED.getCode());
-		}					
-		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}	
 		
 		//공지사항등록
 		int result = mainService.updateNotice(params);
@@ -240,7 +259,7 @@ public class MainController {
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setAttachFile(resultFile);
+        params.setFileList(resultFile);
         
 		if(result > 0) {
 			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);

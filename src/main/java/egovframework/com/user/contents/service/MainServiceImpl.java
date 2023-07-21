@@ -56,6 +56,12 @@ public class MainServiceImpl implements MainService {
 	}
 
 	@Override
+	public int updateNoticeHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateNoticeHitCnt(params);
+	}	
+	
+	@Override
 	public int deleteNotice(Board params) {
 		// TODO Auto-generated method stub
 		return mainDAO.deleteNotice(params);

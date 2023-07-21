@@ -23,6 +23,10 @@ public class SystemDAO extends EgovAbstractMapper{
 		return update(Namespace + ".updateNotice", params);
 	}	
 	
+	public int updateNoticeHitCnt(Board params) {
+		return update(Namespace + ".updateNoticeHitCnt", params);
+	}	
+	
 	public int deleteNotice(Board params) {
 		return delete(Namespace + ".deleteNotice", params);
 	}	

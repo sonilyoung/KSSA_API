@@ -19,8 +19,9 @@ public class Board {
 	private String updateDate;
 	private String command;
 	private String searchTxt;
+	private Long attachFileId;
 	
-	List<AttachFile> attachFile;
+	List<AttachFile> fileList;
 	
 	
 }

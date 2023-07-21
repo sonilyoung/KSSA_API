@@ -27,6 +27,10 @@ public class MainDAO extends EgovAbstractMapper{
 		return update(Namespace + ".updateNotice", params);
 	}
 	
+	public int updateNoticeHitCnt(Board params) {
+		return update(Namespace + ".updateNoticeHitCnt", params);
+	}		
+	
 	public int deleteNotice(Board params) {
 		// TODO Auto-generated method stub
 		return delete(Namespace + ".deleteNotice", params);

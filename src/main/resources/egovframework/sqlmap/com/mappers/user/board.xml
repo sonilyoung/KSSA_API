@@ -9,6 +9,7 @@
 			, TITLE
 			, CONTENTS
 			, USER_NAME
+			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
@@ -34,13 +35,13 @@
 		SELECT 
 			SEQ_ID
 			, TITLE
+			, HIT
 			, CONTENTS
 			, USER_NAME
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
 			, UPDATE_DATE
-			, LANGUAGE_CODE
 		FROM KSSA_NOTICE
 		WHERE SEQ_ID = #{seqId}
 	</select>		
@@ -77,6 +78,14 @@
 			, UPDATE_DATE = now()
 		WHERE SEQ_ID = #{seqId} 
 	</update>	
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNoticeHitCnt" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_NOTICE
+		SET 
+			HIT = HIT+1
+		WHERE SEQ_ID = #{seqId} 
+	</update>		
 	
 	<!-- 공지사항 삭제-->
 	<delete id="deleteNotice" parameterType="egovframework.com.adm.system.vo.Board">

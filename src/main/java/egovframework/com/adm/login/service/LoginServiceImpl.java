@@ -130,22 +130,12 @@ public class LoginServiceImpl implements LoginService {
         		+ login.getUserNm() + "|" 
         		+ login.getUserPw() + "|"
                 + login.getAuthCd() + "|"
-                + login.getDept() + "|"
-                + login.getTelNo() + "|"
-                + login.getEmail() + "|"
+                + login.getHpNo() + "|"
                 + login.getFirstLogin() + "|"
                 + login.getLastLogin() + "|"
-                + login.getPrePw() + "|"
-                + login.getPwChangeDay() + "|"
-                + login.getPwChangeCycle() + "|"
-                + login.getPwChangePeriod() + "|"
                 + login.getUseYn() + "|"
                 + login.getRegId() + "|"
-                + login.getRegDt() + "|"
-                + login.getUpdId() + "|"
-                + login.getUpdDt() + "|"
-                + login.getDelYn() + "|"
-                + login.getDelDt();
+                + login.getRegDt();
         return str;
     }
 
@@ -157,22 +147,12 @@ public class LoginServiceImpl implements LoginService {
         login.setUserNm(strSplit[2]);
         login.setUserPw(strSplit[3]);
         login.setAuthCd(strSplit[4]);
-        login.setDept(strSplit[5]);
-        login.setTelNo(strSplit[6]);
-        login.setEmail(strSplit[7]);
+        login.setHpNo(strSplit[5]);
         login.setFirstLogin(strSplit[8]);
         login.setLastLogin(strSplit[9]);
-        login.setPrePw(strSplit[10]);
-        login.setPwChangeDay(strSplit[11]);
-        login.setPwChangeCycle(strSplit[12]);
-        login.setPwChangePeriod(strSplit[13]);
         login.setUseYn(strSplit[14]);
         login.setRegId(strSplit[15]);
         login.setRegDt(strSplit[16]);
-        login.setUpdId(strSplit[17]);
-        login.setUpdDt(strSplit[18]);
-        login.setDelYn(strSplit[19]);
-        login.setDelDt(strSplit[20]);
         return login;
     }
 

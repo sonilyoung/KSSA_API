@@ -56,6 +56,12 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
+	public int updateNoticeHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return systemDAO.updateNoticeHitCnt(params);
+	}
+	
+	@Override
 	public int deleteNotice(Board params) {
 		// TODO Auto-generated method stub
 		return systemDAO.deleteNotice(params);

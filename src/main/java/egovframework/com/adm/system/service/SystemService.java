@@ -29,6 +29,8 @@ public interface SystemService {
 	
 	public int updateNotice(Board params);
 	
+	public int updateNoticeHitCnt(Board params);
+	
 	public int deleteNotice(Board params);
 
 	public Board selectNotice(Board params);

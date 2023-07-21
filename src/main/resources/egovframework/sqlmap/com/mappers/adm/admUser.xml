@@ -6,30 +6,19 @@
 		
 	<select id="getByLoginId" parameterType="String" resultType="egovframework.com.adm.login.vo.Login">
 		SELECT
-			 USER_NO                       /*사용자NO*/                 											
-		     , USER_ID                     /*사용자ID*/        
-		     , USER_NM                     /*사용자명*/        
-		     , USER_PW                     /*사용자패스워드*/
-		     , AUTH_CD                     /*권한코드*/        
-		     , DEPT                        /*부서*/        
-		     , TEL_NO                      /*전화번호*/        
-		     , HP_NO                       /*핸드폰번호*/        
-		     , EMAIL                       /*이메일*/        
-		     , FIRST_LOGIN                 /*최초로그인*/        
-		     , LAST_LOGIN                  /*최종로그인*/        
-		     , LOGIN_ERROR                 /*로그인에러*/        
-		     , PRE_PW                      /*이전비밀번호*/        
-		     , PW_CHANGE_DAY               /*비밀번호변경일*/        
-		     , PW_CHANGE_CYCLE             /*비밀번호변경주기*/        
-		     , PW_CHANGE_PERIOD            /*비밀번호변경기간*/        
-		     , USE_YN                      /*사용여부*/        
-		     , REG_ID                      /*등록자*/        
-		     , REG_DT                      /*등록일시*/        
-		     , UPD_ID                      /*수정자*/        
-		     , UPD_DT                      /*수정일시*/        
-		     , DEL_YN                      /*삭제여부*/        
-		     , DEL_DT                      /*삭제일시*/        
-		FROM XBT_USER                                             								 
+			USER_NO,
+			USER_ID,
+			USER_NM,
+			USER_PW,
+			AUTH_CD,
+			HP_NO,
+			FIRST_LOGIN,
+			LAST_LOGIN,
+			USE_YN,
+			REG_ID,
+			REG_DT
+		FROM
+			KSSA_USER                                      								 
 		WHERE USER_ID = #{userId}
 	</select>
 

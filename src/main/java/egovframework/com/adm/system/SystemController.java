@@ -111,51 +111,6 @@ public class SystemController {
         
     
     
-    
-    /**
-     * 공지사항등록
-     * 
-     * @param param
-     * @return Company
-     */
-    @PostMapping("/insertNotice.do")
-    @ApiOperation(value = "공지사항", notes = "공지사항등록.")
-    public BaseResponse<Integer> insertNotice(HttpServletRequest request, @RequestBody Board params) {
-    	Login login = loginService.getLoginInfo(request);
-		if (login == null) {
-			throw new BaseException(BaseResponseCode.AUTH_FAIL);
-		}
-		
-		if(StringUtils.isEmpty(params.getTitle())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
-		}
-		
-		if(StringUtils.isEmpty(params.getContents())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
-		}			
-		
-		if(StringUtils.isEmpty(params.getLanguageCode())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "LanguageCode" + BaseApiMessage.REQUIRED.getCode());
-		}			
-		
-		try {
-			//공지사항등록
-			params.setInsertId(login.getUserId());
-			int result = systemService.insertNotice(params);
-			
-			if(result>0) {
-				return new BaseResponse<Integer>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage());
-			}else {
-				return new BaseResponse<Integer>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage());
-			}
-			
-        } catch (Exception e) {
-        	LOGGER.error("error:", e);
-            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
-        }
-    }    
-    
-    
 
     /**
      * 공지사항등록
@@ -168,7 +123,7 @@ public class SystemController {
     @PostMapping(value="/insertNotice.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     @ApiOperation(value = "xray 이미지 업로드", notes = "공지사항등록")
-    public BaseResponse<Board> xrayImageUpload(
+    public BaseResponse<Board> insertNotice(
     		HttpServletRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart(value = "params", required = false) Board params)
@@ -187,6 +142,10 @@ public class SystemController {
 		
 		if(StringUtils.isEmpty(params.getContents())){				
 			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+		}		
+		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
 		}			
 		
 		//공지사항등록
@@ -208,7 +167,7 @@ public class SystemController {
         //fileStorageService.saveFiles(saveFiles, deleteFiles);
 
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setAttachFile(resultFile);
+        params.setFileList(resultFile);
         
 		if(result > 0) {
 			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
@@ -227,9 +186,14 @@ public class SystemController {
      * @param param
      * @return Company
      */
-    @PostMapping("/updateNotice.do")
     @ApiOperation(value = "공지사항", notes = "공지사항수정.")
-    public BaseResponse<Integer> updateNotice(HttpServletRequest request, @RequestBody Board params) {
+    @PostMapping(value="/updateNotice.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Board> updateNotice(
+    		HttpServletRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "params", required = false) Board params)
+            throws Exception {    
     	Login login = loginService.getLoginInfo(request);
 		if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
@@ -237,15 +201,15 @@ public class SystemController {
 		
 
 		if(StringUtils.isEmpty(params.getSeqId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
 		}			
 		
 		if(StringUtils.isEmpty(params.getTitle())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
 		}
 		
 		if(StringUtils.isEmpty(params.getContents())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
 		}			
 		
 		
@@ -255,9 +219,9 @@ public class SystemController {
 			int result = systemService.updateNotice(params);
 			
 			if(result>0) {
-				return new BaseResponse<Integer>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage());
+				return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage());
 			}else {
-				return new BaseResponse<Integer>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage());
+				return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage());
 			}
         } catch (Exception e) {
         	LOGGER.error("error:", e);
