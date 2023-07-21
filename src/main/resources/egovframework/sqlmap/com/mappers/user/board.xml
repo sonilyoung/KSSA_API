@@ -92,4 +92,187 @@
 		DELETE FROM KSSA_NOTICE WHERE SEQ_ID = #{seqId}  
 	</delete>	
 	
+	
+	<!-- FAQ 가져오기 -->
+	<select id="selectFAQList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_FAQ
+		WHERE 1=1
+		<choose>
+			<when test='command == "title"'>
+				AND TITLE LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>
+			<when test='command == "contents"'>
+				AND CONTENTS LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>		
+			<when test='command == "all"'>
+				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
+			</when>									
+		</choose>		
+		
+	</select>	
+	
+	<!-- FAQ 상세 -->
+	<select id="selectFAQ" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, HIT
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_FAQ
+		WHERE SEQ_ID = #{seqId}
+	</select>		
+	
+	<!-- FAQ 등록 -->
+	<insert id="insertFAQ" parameterType="egovframework.com.adm.system.vo.Board" useGeneratedKeys="true" keyProperty="seqId">
+		INSERT INTO KSSA_FAQ
+		(
+			TITLE
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			
+		)
+		VALUES(
+			#{title}
+			,#{contents}
+			,#{userName}
+			,#{insertId}
+			,now()
+		)	
+	</insert>	
+	
+	
+	<!-- FAQ 수정 -->
+	<update id="updateFAQ" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_FAQ
+		SET 
+			TITLE = #{title}
+			, CONTENTS = #{title}
+			, USER_NAME = #{userName}
+			, UPDATE_ID = #{updateId}
+			, UPDATE_DATE = now()
+		WHERE SEQ_ID = #{seqId} 
+	</update>	
+	
+	<!-- FAQ 수정 -->
+	<update id="updateFAQHitCnt" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_FAQ
+		SET 
+			HIT = HIT+1
+		WHERE SEQ_ID = #{seqId} 
+	</update>		
+	
+	<!-- FAQ 삭제-->
+	<delete id="deleteFAQ" parameterType="egovframework.com.adm.system.vo.Board">
+		DELETE FROM KSSA_FAQ WHERE SEQ_ID = #{seqId}  
+	</delete>	
+		
+		
+		
+	<!-- 교육내용 가져오기 -->
+	<select id="selectInfoList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_INFO
+		WHERE 1=1
+		<choose>
+			<when test='command == "title"'>
+				AND TITLE LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>
+			<when test='command == "contents"'>
+				AND CONTENTS LIKE CONCAT('%', #{searchTxt}, '%')
+			</when>		
+			<when test='command == "all"'>
+				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
+			</when>									
+		</choose>		
+		
+	</select>	
+	
+	<!-- 교육내용 상세 -->
+	<select id="selectInfo" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, HIT
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_INFO
+		WHERE SEQ_ID = #{seqId}
+	</select>		
+	
+	<!-- 교육내용 등록 -->
+	<insert id="insertInfo" parameterType="egovframework.com.adm.system.vo.Board" useGeneratedKeys="true" keyProperty="seqId">
+		INSERT INTO KSSA_INFO
+		(
+			TITLE
+			, CONTENTS
+			, USER_NAME
+			, INSERT_ID
+			, INSERT_DATE
+			
+		)
+		VALUES(
+			#{title}
+			,#{contents}
+			,#{userName}
+			,#{insertId}
+			,now()
+		)	
+	</insert>	
+	
+	
+	<!-- 교육내용 수정 -->
+	<update id="updateInfo" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_INFO
+		SET 
+			TITLE = #{title}
+			, CONTENTS = #{title}
+			, USER_NAME = #{userName}
+			, UPDATE_ID = #{updateId}
+			, UPDATE_DATE = now()
+		WHERE SEQ_ID = #{seqId} 
+	</update>	
+	
+	<!-- 교육내용 수정 -->
+	<update id="updateInfoHitCnt" parameterType="egovframework.com.adm.system.vo.Board">	
+		UPDATE KSSA_INFO
+		SET 
+			HIT = HIT+1
+		WHERE SEQ_ID = #{seqId} 
+	</update>		
+	
+	<!-- 교육내용 삭제-->
+	<delete id="deleteInfo" parameterType="egovframework.com.adm.system.vo.Board">
+		DELETE FROM KSSA_INFO WHERE SEQ_ID = #{seqId}  
+	</delete>	
+			
 </mapper>

@@ -35,5 +35,28 @@ public interface MainService {
 	public int deleteNotice(Board params);
 
 	public Board selectNotice(Board params);
+	
+	public List<Board> selectFAQList(Board params);
+	
+	public int insertFAQ(Board params);
+	
+	public int updateFAQ(Board params);
+	
+	public int updateFAQHitCnt(Board params);
+	
+	public int deleteFAQ(Board params);
 
+	public Board selectFAQ(Board params);
+
+	public List<Board> selectInfoList(Board params);
+	
+	public int insertInfo(Board params);
+	
+	public int updateInfo(Board params);
+	
+	public int updateInfoHitCnt(Board params);
+	
+	public int deleteInfo(Board params);
+
+	public Board selectInfo(Board params);	
 }

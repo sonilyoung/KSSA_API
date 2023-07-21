@@ -310,5 +310,503 @@ public class MainController {
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
         }
     }      
+    
+    
+    /**
+     * FAQ조회
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectFAQList.do")
+    @ApiOperation(value = "FAQ", notes = "FAQ목록조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<List<Board>> selectFAQList(HttpServletRequest request, @RequestBody Board params) {
+		
+		try {
+			//FAQ조회
+	        return new BaseResponse<List<Board>>(mainService.selectFAQList(params));
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }    
+    
+    /**
+     * FAQ상세
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectFAQ.do")
+    @ApiOperation(value = "FAQ상세", notes = "FAQ상세조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Board> selectFAQ(HttpServletRequest request, @RequestBody Board params) {
+		
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}			
+		
+		try {
+			//FAQ조회
+			mainService.updateFAQHitCnt(params);
+			Board result = mainService.selectFAQ(params);
+			AttachFile attachFile = new AttachFile();
+			attachFile.setFileTarget(params.getSeqId());
+			List<AttachFile> fList = fileService.selectFileAll(attachFile);
+			result.setFileList(fList);
+			
+	        return new BaseResponse<Board>(result);
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }    
+        
+    
+
+
+    /**
+     * FAQ등록
+     * 
+     * @param files
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value="/insertFAQ.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    @ApiOperation(value = "FAQ등록", notes = "FAQ등록")
+    public BaseResponse<Board> insertFAQ(
+    		HttpServletRequest request,
+            @RequestPart(value = "files", required = false) MultipartFile files,
+            @RequestPart(value = "params", required = true) Board params)
+            throws Exception {
+		
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
+        List<AttachFile> saveFiles = null;
+        
+		if(StringUtils.isEmpty(params.getTitle())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getContents())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}			
+		
+		
+		//FAQ등록
+		int result = mainService.insertFAQ(params);
+		
+        if (files != null) {
+        	int i = 1;
+            saveFiles = new ArrayList<>();
+            // 파일 생성
+        	AttachFile detail = fileStorageService.createFile(files);
+        	detail.setInsertId(params.getInsertId());
+        	detail.setFileTarget(params.getSeqId());
+            if (detail != null) {
+                detail.setFileSn(i++);
+                saveFiles.add(detail);
+            }
+            // 파일 정보 생성
+            fileService.insertFile(saveFiles);            
+        }
+        List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
+        params.setFileList(resultFile);
+        
+		if(result > 0) {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+		}else {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+		}        
+    }  
+
+    
+    
+    
+    /**
+     * FAQ수정
+     * 
+     * @param files
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value="/updateFAQ.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    @ApiOperation(value = "FAQ수정", notes = "FAQ수정")
+    public BaseResponse<Board> updateFAQ(
+    		HttpServletRequest request,
+            @RequestPart(value = "files", required = false) MultipartFile files,
+            @RequestPart(value = "params", required = true) Board params)
+            throws Exception {
+ 
+    	
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
+        List<AttachFile> saveFiles = null;
+        
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}        
+        
+		if(StringUtils.isEmpty(params.getTitle())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getContents())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}	
+		
+		//FAQ등록
+		int result = mainService.updateFAQ(params);
+		
+        if (files != null) {
+        	AttachFile af = new AttachFile();
+        	af.setFileTarget(params.getSeqId());
+        	fileService.deleteFileAll(af);
+        	
+        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	
+        	if(fList!=null) {
+        		for(AttachFile fd : fList) {
+        			fileStorageService.deleteFile(fd);		
+        		}
+        	}
+        	
+        	int i = 1;
+            saveFiles = new ArrayList<>();
+            // 파일 생성
+        	AttachFile detail = fileStorageService.createFile(files);
+        	detail.setInsertId(params.getInsertId());
+        	detail.setFileTarget(params.getSeqId());            
+            if (detail != null) {
+                detail.setFileSn(i++);
+                saveFiles.add(detail);
+            }
+            
+            // 파일 정보 생성
+            fileService.insertFile(saveFiles);            
+        }
+        
+        List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
+        params.setFileList(resultFile);
+        
+		if(result > 0) {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+		}else {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+		}        
+    }  
+    
+    
+    /**
+     * FAQ삭제
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/deleteFAQ.do")
+    @ApiOperation(value = "FAQ", notes = "FAQ삭제.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Integer> deleteFAQ(HttpServletRequest request, @RequestBody Board params) {
+		
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}				
+		
+		try {
+			//FAQ삭제
+			int result = mainService.deleteFAQ(params);
+			
+        	AttachFile af = new AttachFile();
+        	af.setFileTarget(params.getSeqId());
+        	fileService.deleteFileAll(af);
+        	
+        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	
+        	if(fList!=null) {
+        		for(AttachFile fd : fList) {
+        			fileStorageService.deleteFile(fd);		
+        		}
+        	}			
+			
+			if(result>0) {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
+			}else {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage());
+			}
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }      
+    
+    /**
+     * Info조회
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectInfoList.do")
+    @ApiOperation(value = "Info", notes = "Info목록조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<List<Board>> selectInfoList(HttpServletRequest request, @RequestBody Board params) {
+		
+		try {
+			//Info조회
+	        return new BaseResponse<List<Board>>(mainService.selectInfoList(params));
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }    
+    
+    /**
+     * Info상세
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectInfo.do")
+    @ApiOperation(value = "Info상세", notes = "Info상세조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Board> selectInfo(HttpServletRequest request, @RequestBody Board params) {
+		
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}			
+		
+		try {
+			//Info조회
+			mainService.updateInfoHitCnt(params);
+			Board result = mainService.selectInfo(params);
+			AttachFile attachFile = new AttachFile();
+			attachFile.setFileTarget(params.getSeqId());
+			List<AttachFile> fList = fileService.selectFileAll(attachFile);
+			result.setFileList(fList);
+			
+	        return new BaseResponse<Board>(result);
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }    
+        
+    
+
+
+    /**
+     * Info등록
+     * 
+     * @param files
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value="/insertInfo.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    @ApiOperation(value = "Info등록", notes = "Info등록")
+    public BaseResponse<Board> insertInfo(
+    		HttpServletRequest request,
+            @RequestPart(value = "files", required = false) MultipartFile files,
+            @RequestPart(value = "params", required = true) Board params)
+            throws Exception {
+		
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
+        List<AttachFile> saveFiles = null;
+        
+		if(StringUtils.isEmpty(params.getTitle())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getContents())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}			
+		
+		
+		//Info등록
+		int result = mainService.insertInfo(params);
+		
+        if (files != null) {
+        	int i = 1;
+            saveFiles = new ArrayList<>();
+            // 파일 생성
+        	AttachFile detail = fileStorageService.createFile(files);
+        	detail.setInsertId(params.getInsertId());
+        	detail.setFileTarget(params.getSeqId());
+            if (detail != null) {
+                detail.setFileSn(i++);
+                saveFiles.add(detail);
+            }
+            // 파일 정보 생성
+            fileService.insertFile(saveFiles);            
+        }
+        List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
+        params.setFileList(resultFile);
+        
+		if(result > 0) {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+		}else {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+		}        
+    }  
+
+    
+    
+    
+    /**
+     * Info수정
+     * 
+     * @param files
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value="/updateInfo.do" , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    @ApiOperation(value = "Info수정", notes = "Info수정")
+    public BaseResponse<Board> updateInfo(
+    		HttpServletRequest request,
+            @RequestPart(value = "files", required = false) MultipartFile files,
+            @RequestPart(value = "params", required = true) Board params)
+            throws Exception {
+ 
+    	
+    	Login login = loginService.getLoginInfo(request);
+		if (login != null) {
+			params.setInsertId(login.getUserId());
+			params.setUserName(login.getUserNm());
+		}    	
+    	
+        List<AttachFile> saveFiles = null;
+        
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}        
+        
+		if(StringUtils.isEmpty(params.getTitle())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Title" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getContents())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "Contents" + BaseApiMessage.REQUIRED.getCode());
+		}
+		
+		if(StringUtils.isEmpty(params.getUserName())){				
+			return new BaseResponse<Board>(BaseResponseCode.PARAMS_ERROR, "UserName" + BaseApiMessage.REQUIRED.getCode());
+		}	
+		
+		//Info등록
+		int result = mainService.updateInfo(params);
+		
+        if (files != null) {
+        	AttachFile af = new AttachFile();
+        	af.setFileTarget(params.getSeqId());
+        	fileService.deleteFileAll(af);
+        	
+        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	
+        	if(fList!=null) {
+        		for(AttachFile fd : fList) {
+        			fileStorageService.deleteFile(fd);		
+        		}
+        	}
+        	
+        	int i = 1;
+            saveFiles = new ArrayList<>();
+            // 파일 생성
+        	AttachFile detail = fileStorageService.createFile(files);
+        	detail.setInsertId(params.getInsertId());
+        	detail.setFileTarget(params.getSeqId());            
+            if (detail != null) {
+                detail.setFileSn(i++);
+                saveFiles.add(detail);
+            }
+            
+            // 파일 정보 생성
+            fileService.insertFile(saveFiles);            
+        }
+        
+        List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
+        params.setFileList(resultFile);
+        
+		if(result > 0) {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+		}else {
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+		}        
+    }  
+    
+    
+    /**
+     * Info삭제
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/deleteInfo.do")
+    @ApiOperation(value = "Info", notes = "Info삭제.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Integer> deleteInfo(HttpServletRequest request, @RequestBody Board params) {
+		
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}				
+		
+		try {
+			//Info삭제
+			int result = mainService.deleteInfo(params);
+			
+        	AttachFile af = new AttachFile();
+        	af.setFileTarget(params.getSeqId());
+        	fileService.deleteFileAll(af);
+        	
+        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	
+        	if(fList!=null) {
+        		for(AttachFile fd : fList) {
+        			fileStorageService.deleteFile(fd);		
+        		}
+        	}			
+			
+			if(result>0) {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
+			}else {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage());
+			}
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }      
+    
 
 }

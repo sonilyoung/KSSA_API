@@ -74,7 +74,81 @@ public class MainServiceImpl implements MainService {
 	}
 
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectFAQList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectFAQList(params);
+	}
 
+	@Override
+	public int insertFAQ(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.insertFAQ(params);
+	}
+
+	@Override
+	public int updateFAQ(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateFAQ(params);
+	}
+
+	@Override
+	public int updateFAQHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateFAQHitCnt(params);
+	}	
+	
+	@Override
+	public int deleteFAQ(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteFAQ(params);
+	}
+
+	@Override
+	public Board selectFAQ(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectFAQ(params);
+	}
+
+
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectInfoList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectInfoList(params);
+	}
+
+	@Override
+	public int insertInfo(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.insertInfo(params);
+	}
+
+	@Override
+	public int updateInfo(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateInfo(params);
+	}
+
+	@Override
+	public int updateInfoHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateInfoHitCnt(params);
+	}	
+	
+	@Override
+	public int deleteInfo(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteInfo(params);
+	}
+
+	@Override
+	public Board selectInfo(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectInfo(params);
+	}
 
 	
 
