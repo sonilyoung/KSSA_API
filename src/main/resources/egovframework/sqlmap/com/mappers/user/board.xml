@@ -116,7 +116,7 @@
 		UPDATE KSSA_NOTICE
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
@@ -211,7 +211,7 @@
 		UPDATE KSSA_FAQ
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
@@ -307,7 +307,7 @@
 		UPDATE KSSA_INFO
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
