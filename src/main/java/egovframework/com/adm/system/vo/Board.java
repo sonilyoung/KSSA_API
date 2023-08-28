@@ -17,11 +17,14 @@ public class Board {
 	private String updateId;
 	private String userName;
 	private String updateDate;
+	private String useYn;
 	private String searchTxt;
 	private String command;
 	private Long attachFileId;
 	
 	List<AttachFile> fileList;
+	
+	List<Long> seqIdList;
 	
 	
 }

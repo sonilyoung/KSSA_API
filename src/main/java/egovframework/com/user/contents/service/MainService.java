@@ -24,6 +24,10 @@ import egovframework.com.user.contents.vo.Notice;
  */
 public interface MainService {
 	
+	public List<Board> selectMainNoticeList(Board params);
+	
+	public List<Board> selectMainInfoList(Board params);
+	
 	public List<Board> selectNoticeList(Board params);
 	
 	public int insertNotice(Board params);

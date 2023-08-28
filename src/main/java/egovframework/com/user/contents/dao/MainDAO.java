@@ -12,6 +12,16 @@ public class MainDAO extends EgovAbstractMapper{
 	private static final String Namespace = "egovframework.com.user.contents.dao.MainDAO";
 	
 	
+	public List<?> selectMainNoticeList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<?>)selectList(Namespace + ".selectMainNoticeList", params);
+	}	
+	
+	public List<?> selectMainInfoList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<?>)selectList(Namespace + ".selectMainInfoList", params);
+	}	
+	
 	public List<?> selectNoticeList(Board params) {
 		// TODO Auto-generated method stub
 		return (List<?>)selectList(Namespace + ".selectNoticeList", params);

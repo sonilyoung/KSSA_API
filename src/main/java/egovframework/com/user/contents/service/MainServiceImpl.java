@@ -38,6 +38,20 @@ public class MainServiceImpl implements MainService {
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<Board> selectMainNoticeList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectMainNoticeList(params);
+	}    
+    
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectMainInfoList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectMainInfoList(params);
+	}
+    
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<Board> selectNoticeList(Board params) {
 		// TODO Auto-generated method stub
 		return (List<Board>)mainDAO.selectNoticeList(params);

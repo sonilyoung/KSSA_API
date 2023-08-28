@@ -63,6 +63,49 @@ public class MainController {
     @Autowired
     private FileService fileService;
     
+    
+    /**
+     * 공지사항조회메인
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectMainNoticeList.do")
+    @ApiOperation(value = "공지사항", notes = "공지사항목록조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<List<Board>> selectMainNoticeList(HttpServletRequest request, @RequestBody Board params) {
+		
+		try {
+			//공지사항조회
+	        return new BaseResponse<List<Board>>(mainService.selectMainNoticeList(params));
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }     
+    
+    
+    /**
+     * Info조회
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/selectMainInfoList.do")
+    @ApiOperation(value = "Info", notes = "Info목록조회.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<List<Board>> selectMainInfoList(HttpServletRequest request, @RequestBody Board params) {
+		
+		try {
+			//Info조회
+	        return new BaseResponse<List<Board>>(mainService.selectMainInfoList(params));
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }        
+    
+    
     /**
      * 공지사항조회
      * 
@@ -76,7 +119,14 @@ public class MainController {
 		
 		try {
 			//공지사항조회
-	        return new BaseResponse<List<Board>>(mainService.selectNoticeList(params));
+			List<Board> resultList = mainService.selectNoticeList(params);
+			for(Board b : resultList) {
+				AttachFile attachFile = new AttachFile();
+				attachFile.setFileTarget(b.getSeqId());
+				List<AttachFile> fList = fileService.selectFileAll(attachFile);			
+				b.setFileList(fList);
+			}
+	        return new BaseResponse<List<Board>>(resultList);
         } catch (Exception e) {
         	LOGGER.error("error:", e);
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
@@ -173,12 +223,13 @@ public class MainController {
             fileService.insertFile(saveFiles);            
         }
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectNotice(params);
+        resultDetail.setFileList(resultFile);
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
 
@@ -259,12 +310,13 @@ public class MainController {
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectNotice(params);
+        resultDetail.setFileList(resultFile);        
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
     
@@ -280,25 +332,30 @@ public class MainController {
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<Integer> deleteNotice(HttpServletRequest request, @RequestBody Board params) {
 		
-		if(StringUtils.isEmpty(params.getSeqId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		if(StringUtils.isEmpty(params.getSeqIdList())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqIdList" + BaseApiMessage.REQUIRED.getCode());
 		}				
 		
 		try {
-			//공지사항삭제
-			int result = mainService.deleteNotice(params);
-			
-        	AttachFile af = new AttachFile();
-        	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
-        	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
-        	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}			
+			int result = 0;
+			for(Long s : params.getSeqIdList()) {
+				Board bs = new Board();
+				bs.setSeqId(s);
+				//공지사항삭제
+				result = mainService.deleteNotice(bs);		
+				
+	        	AttachFile af = new AttachFile();
+	        	af.setFileTarget(bs.getSeqId());
+	        	fileService.deleteFileAll(af);
+	        	
+	        	List<AttachFile> fList = fileService.selectFileAll(af);
+	        	
+	        	if(fList!=null) {
+	        		for(AttachFile fd : fList) {
+	        			fileStorageService.deleteFile(fd);		
+	        		}
+	        	}					
+			}
 			
 			if(result>0) {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
@@ -325,7 +382,14 @@ public class MainController {
 		
 		try {
 			//FAQ조회
-	        return new BaseResponse<List<Board>>(mainService.selectFAQList(params));
+			List<Board> resultList = mainService.selectFAQList(params);
+			for(Board b : resultList) {
+				AttachFile attachFile = new AttachFile();
+				attachFile.setFileTarget(b.getSeqId());
+				List<AttachFile> fList = fileService.selectFileAll(attachFile);			
+				b.setFileList(fList);
+			}			
+	        return new BaseResponse<List<Board>>(resultList);
         } catch (Exception e) {
         	LOGGER.error("error:", e);
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
@@ -422,12 +486,13 @@ public class MainController {
             fileService.insertFile(saveFiles);            
         }
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectFAQ(params);
+        resultDetail.setFileList(resultFile);          
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
 
@@ -508,12 +573,14 @@ public class MainController {
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectFAQ(params);
+        resultDetail.setFileList(resultFile);           
+                
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
     
@@ -529,25 +596,31 @@ public class MainController {
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<Integer> deleteFAQ(HttpServletRequest request, @RequestBody Board params) {
 		
-		if(StringUtils.isEmpty(params.getSeqId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		if(StringUtils.isEmpty(params.getSeqIdList())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqIdList" + BaseApiMessage.REQUIRED.getCode());
 		}				
 		
 		try {
-			//FAQ삭제
-			int result = mainService.deleteFAQ(params);
 			
-        	AttachFile af = new AttachFile();
-        	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
-        	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
-        	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}			
+			int result = 0;
+			for(Long s : params.getSeqIdList()) {
+				Board bs = new Board();
+				bs.setSeqId(s);
+				//공지사항삭제
+				result = mainService.deleteFAQ(bs);		
+				
+	        	AttachFile af = new AttachFile();
+	        	af.setFileTarget(bs.getSeqId());
+	        	fileService.deleteFileAll(af);
+	        	
+	        	List<AttachFile> fList = fileService.selectFileAll(af);
+	        	
+	        	if(fList!=null) {
+	        		for(AttachFile fd : fList) {
+	        			fileStorageService.deleteFile(fd);		
+	        		}
+	        	}					
+			}			
 			
 			if(result>0) {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
@@ -573,7 +646,14 @@ public class MainController {
 		
 		try {
 			//Info조회
-	        return new BaseResponse<List<Board>>(mainService.selectInfoList(params));
+			List<Board> resultList = mainService.selectInfoList(params);
+			for(Board b : resultList) {
+				AttachFile attachFile = new AttachFile();
+				attachFile.setFileTarget(b.getSeqId());
+				List<AttachFile> fList = fileService.selectFileAll(attachFile);			
+				b.setFileList(fList);
+			}			
+	        return new BaseResponse<List<Board>>(resultList);	        
         } catch (Exception e) {
         	LOGGER.error("error:", e);
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
@@ -670,12 +750,13 @@ public class MainController {
             fileService.insertFile(saveFiles);            
         }
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectInfo(params);
+        resultDetail.setFileList(resultFile);           
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
 
@@ -756,12 +837,14 @@ public class MainController {
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
-        params.setFileList(resultFile);
+        Board resultDetail = mainService.selectInfo(params);
+        resultDetail.setFileList(resultFile);           
+        
         
 		if(result > 0) {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_SUCCESS, BaseResponseCode.SAVE_SUCCESS.getMessage(), resultDetail);
 		}else {
-			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), params);
+			return new BaseResponse<Board>(BaseResponseCode.SAVE_ERROR, BaseResponseCode.SAVE_ERROR.getMessage(), resultDetail);
 		}        
     }  
     
@@ -777,25 +860,31 @@ public class MainController {
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<Integer> deleteInfo(HttpServletRequest request, @RequestBody Board params) {
 		
-		if(StringUtils.isEmpty(params.getSeqId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		if(StringUtils.isEmpty(params.getSeqIdList())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqIdList" + BaseApiMessage.REQUIRED.getCode());
 		}				
 		
 		try {
-			//Info삭제
-			int result = mainService.deleteInfo(params);
 			
-        	AttachFile af = new AttachFile();
-        	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
-        	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
-        	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}			
+			int result = 0;
+			for(Long s : params.getSeqIdList()) {
+				Board bs = new Board();
+				bs.setSeqId(s);
+				//공지사항삭제
+				result = mainService.deleteInfo(bs);		
+				
+	        	AttachFile af = new AttachFile();
+	        	af.setFileTarget(bs.getSeqId());
+	        	fileService.deleteFileAll(af);
+	        	
+	        	List<AttachFile> fList = fileService.selectFileAll(af);
+	        	
+	        	if(fList!=null) {
+	        		for(AttachFile fd : fList) {
+	        			fileStorageService.deleteFile(fd);		
+	        		}
+	        	}					
+			}					
 			
 			if(result>0) {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());

@@ -3,6 +3,47 @@
 <mapper namespace="egovframework.com.user.contents.dao.MainDAO">
 	
 	<!-- 공지사항 가져오기 -->
+	<select id="selectMainNoticeList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, HIT
+			, USE_YN
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_NOTICE
+		ORDER BY SEQ_ID DESC
+		LIMIT 5
+	</select>		
+	
+	
+		
+	<!-- 교육내용 가져오기 -->
+	<select id="selectMainInfoList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
+		SELECT 
+			SEQ_ID
+			, TITLE
+			, CONTENTS
+			, USER_NAME
+			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, HIT
+			, USE_YN
+			, INSERT_ID
+			, INSERT_DATE
+			, UPDATE_ID
+			, UPDATE_DATE
+		FROM KSSA_INFO
+		ORDER BY SEQ_ID DESC
+		LIMIT 5
+	</select>		
+	
+	
+	<!-- 공지사항 가져오기 -->
 	<select id="selectNoticeList" parameterType="egovframework.com.adm.system.vo.Board" resultType="egovframework.com.adm.system.vo.Board">
 		SELECT 
 			SEQ_ID
@@ -10,6 +51,8 @@
 			, CONTENTS
 			, USER_NAME
 			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, HIT
+			, USE_YN
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
@@ -27,7 +70,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- 공지사항 상세 -->
@@ -39,6 +82,7 @@
 			, CONTENTS
 			, USER_NAME
 			, INSERT_ID
+			, USE_YN
 			, INSERT_DATE
 			, UPDATE_ID
 			, UPDATE_DATE
@@ -76,6 +120,7 @@
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
+			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 
 	</update>	
 	
@@ -101,6 +146,8 @@
 			, CONTENTS
 			, USER_NAME
 			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, HIT
+			, USE_YN
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
@@ -118,7 +165,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- FAQ 상세 -->
@@ -129,6 +176,7 @@
 			, HIT
 			, CONTENTS
 			, USER_NAME
+			, USE_YN
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
@@ -167,6 +215,7 @@
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
+			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 
 	</update>	
 	
@@ -193,6 +242,8 @@
 			, CONTENTS
 			, USER_NAME
 			, (SELECT MAX(ATTACH_FILE_ID) FROM KSSA_ATTACH_FILE AF WHERE SEQ_ID = FILE_TARGET)AS ATTACH_FILE_ID
+			, HIT
+			, USE_YN
 			, INSERT_ID
 			, INSERT_DATE
 			, UPDATE_ID
@@ -210,7 +261,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- 교육내용 상세 -->
@@ -222,6 +273,7 @@
 			, CONTENTS
 			, USER_NAME
 			, INSERT_ID
+			, USE_YN
 			, INSERT_DATE
 			, UPDATE_ID
 			, UPDATE_DATE
@@ -259,6 +311,7 @@
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
+			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 
 	</update>	
 	
