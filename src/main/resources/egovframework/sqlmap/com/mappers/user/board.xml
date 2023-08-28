@@ -27,7 +27,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- 공지사항 상세 -->
@@ -72,7 +72,7 @@
 		UPDATE KSSA_NOTICE
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
@@ -118,7 +118,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- FAQ 상세 -->
@@ -163,7 +163,7 @@
 		UPDATE KSSA_FAQ
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
@@ -210,7 +210,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		
+		ORDER BY INSERT_ID DESC, UPDATE_DATE DESC
 	</select>	
 	
 	<!-- 교육내용 상세 -->
@@ -255,7 +255,7 @@
 		UPDATE KSSA_INFO
 		SET 
 			TITLE = #{title}
-			, CONTENTS = #{title}
+			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
 			, UPDATE_DATE = now()
