@@ -20,6 +20,7 @@ public class Board {
 	private String useYn;
 	private String searchTxt;
 	private String command;
+	private String path;
 	private Long attachFileId;
 	
 	List<AttachFile> fileList;

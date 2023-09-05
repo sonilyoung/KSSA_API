@@ -165,5 +165,118 @@ public class MainServiceImpl implements MainService {
 	}
 
 	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectNewsList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectNewsList(params);
+	}
 
+	@Override
+	public int insertNews(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.insertNews(params);
+	}
+
+	@Override
+	public int updateNews(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateNews(params);
+	}
+
+	@Override
+	public int updateNewsHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateNewsHitCnt(params);
+	}	
+	
+	@Override
+	public int deleteNews(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteNews(params);
+	}
+
+	@Override
+	public Board selectNews(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectNews(params);
+	}	
+	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectLawsList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectLawsList(params);
+	}
+
+	@Override
+	public int insertLaws(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.insertLaws(params);
+	}
+
+	@Override
+	public int updateLaws(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateLaws(params);
+	}
+
+	@Override
+	public int updateLawsHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateLawsHitCnt(params);
+	}	
+	
+	@Override
+	public int deleteLaws(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteLaws(params);
+	}
+
+	@Override
+	public Board selectLaws(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectLaws(params);
+	}	
+	
+
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Board> selectDatumList(Board params) {
+		// TODO Auto-generated method stub
+		return (List<Board>)mainDAO.selectDatumList(params);
+	}
+
+	@Override
+	public int insertDatum(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.insertDatum(params);
+	}
+
+	@Override
+	public int updateDatum(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateDatum(params);
+	}
+
+	@Override
+	public int updateDatumHitCnt(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.updateDatumHitCnt(params);
+	}	
+	
+	@Override
+	public int deleteDatum(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteDatum(params);
+	}
+
+	@Override
+	public Board selectDatum(Board params) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectDatum(params);
+	}	
 }

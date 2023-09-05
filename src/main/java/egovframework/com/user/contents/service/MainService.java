@@ -62,5 +62,43 @@ public interface MainService {
 	
 	public int deleteInfo(Board params);
 
-	public Board selectInfo(Board params);	
+	public Board selectInfo(Board params);
+	
+	
+	public List<Board> selectNewsList(Board params);
+	
+	public int insertNews(Board params);
+	
+	public int updateNews(Board params);
+	
+	public int updateNewsHitCnt(Board params);
+	
+	public int deleteNews(Board params);
+
+	public Board selectNews(Board params);	
+	
+	public List<Board> selectLawsList(Board params);
+	
+	public int insertLaws(Board params);
+	
+	public int updateLaws(Board params);
+	
+	public int updateLawsHitCnt(Board params);
+	
+	public int deleteLaws(Board params);
+
+	public Board selectLaws(Board params);		
+	
+	public List<Board> selectDatumList(Board params);
+	
+	public int insertDatum(Board params);
+	
+	public int updateDatum(Board params);
+	
+	public int updateDatumHitCnt(Board params);
+	
+	public int deleteDatum(Board params);
+
+	public Board selectDatum(Board params);		
 }
+
