@@ -933,6 +933,7 @@ public class MainController {
 			for(Board b : resultList) {
 				AttachFile attachFile = new AttachFile();
 				attachFile.setFileTarget(b.getSeqId());
+				attachFile.setMemo(params.getPath());
 				List<AttachFile> fList = fileService.selectFileAll(attachFile);			
 				b.setFileList(fList);
 			}			
@@ -979,6 +980,7 @@ public class MainController {
 			
 			AttachFile attachFile = new AttachFile();
 			attachFile.setFileTarget(params.getSeqId());
+			attachFile.setMemo(params.getPath());
 			List<AttachFile> fList = fileService.selectFileAll(attachFile);
 			result.setFileList(fList);
 			
@@ -1055,6 +1057,7 @@ public class MainController {
         	detail.setFileTarget(params.getSeqId());
             if (detail != null) {
                 detail.setFileSn(i++);
+                detail.setMemo(params.getPath());
                 saveFiles.add(detail);
             }
             // 파일 정보 생성
@@ -1160,6 +1163,7 @@ public class MainController {
         	detail.setFileTarget(params.getSeqId());            
             if (detail != null) {
                 detail.setFileSn(i++);
+                detail.setMemo(params.getPath());
                 saveFiles.add(detail);
             }
             
@@ -1212,7 +1216,7 @@ public class MainController {
 			for(Long s : params.getSeqIdList()) {
 				Board bs = new Board();
 				bs.setSeqId(s);
-				
+				params.setSeqId(s);
 				if(params.getPath().equals(REST_ROOM[0])) {
 					result = mainService.deleteNews(params);
 				}else if(params.getPath().equals(REST_ROOM[1])){

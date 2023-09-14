@@ -354,7 +354,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		ORDER BY INSERT_DATE DESC, UPDATE_DATE DESC
+		ORDER BY INSERT_DATE DESC
 	</select>		
 	
 	<!-- 뉴스 상세 -->
@@ -390,7 +390,7 @@
 			,#{contents}
 			,#{userName}
 			,#{insertId}
-			,now()
+			,#{insertDate}
 		)	
 	</insert>	
 	
@@ -403,6 +403,7 @@
 			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
+			, INSERT_DATE = #{insertDate}
 			, UPDATE_DATE = now()
 			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 
@@ -450,7 +451,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		ORDER BY INSERT_DATE DESC, UPDATE_DATE DESC
+		ORDER BY INSERT_DATE DESC
 	</select>		
 	
 	<!-- 관련법령 상세 -->
@@ -486,7 +487,7 @@
 			,#{contents}
 			,#{userName}
 			,#{insertId}
-			,now()
+			,#{insertDate}
 		)	
 	</insert>	
 	
@@ -499,6 +500,7 @@
 			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
+			, INSERT_DATE = #{insertDate}
 			, UPDATE_DATE = now()
 			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 
@@ -544,7 +546,7 @@
 				AND (TITLE LIKE CONCAT('%', #{searchTxt}, '%') || CONTENTS CONCAT('%', #{searchTxt}, '%'))
 			</when>									
 		</choose>		
-		ORDER BY INSERT_DATE DESC, UPDATE_DATE DESC
+		ORDER BY INSERT_DATE DESC
 	</select>		
 	
 	<!-- 교육자료 상세 -->
@@ -573,14 +575,13 @@
 			, USER_NAME
 			, INSERT_ID
 			, INSERT_DATE
-			
 		)
 		VALUES(
 			#{title}
 			,#{contents}
 			,#{userName}
 			,#{insertId}
-			,now()
+			,#{insertDate}
 		)	
 	</insert>	
 	
@@ -593,6 +594,7 @@
 			, CONTENTS = #{contents}
 			, USER_NAME = #{userName}
 			, UPDATE_ID = #{updateId}
+			, INSERT_DATE = #{insertDate}
 			, UPDATE_DATE = now()
 			, USE_YN = #{useYn}
 		WHERE SEQ_ID = #{seqId} 

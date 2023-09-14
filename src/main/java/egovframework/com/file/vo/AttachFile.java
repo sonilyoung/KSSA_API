@@ -27,7 +27,7 @@ public class AttachFile {
     private int fileSize;
     private String insertDate;
     private String insertId;
-    
+    private String memo;
     private String targetName;
     private String command;
 }
