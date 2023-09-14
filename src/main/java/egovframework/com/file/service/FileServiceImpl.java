@@ -62,10 +62,12 @@ public class FileServiceImpl implements FileService {
 	public int deleteFile(AttachFile param) {
 		// TODO Auto-generated method stub
     	AttachFile attachDetail = selectFile(param);
+
+    	// 파일 삭제
+        fileStorageService.deleteFile(attachDetail);
+        
         // DB 정보 삭제
         int iRslt = fileDAO.deleteFile(param);
-        // 파일 삭제
-        fileStorageService.deleteFile(attachDetail);
         return iRslt;
 	}
 

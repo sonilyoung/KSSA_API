@@ -21,8 +21,11 @@
 		FROM KSSA_ATTACH_FILE  
 		WHERE ATTACH_FILE_ID = #{attachFileId}
 		AND FILE_TARGET = #{fileTarget}
-		AND FILE_SN = #{fileSn}
-		AND MEMO = #{memo}
+		<choose>
+			<when test='memo != "" and memo != null'>
+				AND MEMO = #{memo}
+			</when>
+		</choose>	
 	</select>
 	
 	<!-- 이미지 파일 path 조회 -->
@@ -42,7 +45,11 @@
 			MEMO         
 		FROM KSSA_ATTACH_FILE  
 		WHERE FILE_TARGET = #{fileTarget}
-		AND MEMO = #{memo}
+		<choose>
+			<when test='memo != "" and memo != null'>
+				AND MEMO = #{memo}
+			</when>
+		</choose>		
 	</select>	
 	
 	<!-- 첨부 파일 상세 정보 생성 -->
@@ -76,11 +83,21 @@
 	<!-- 첨부 파일 정보 삭제 -->
 	<delete id="deleteFile" parameterType="egovframework.com.file.vo.AttachFile">
 		DELETE FROM KSSA_ATTACH_FILE WHERE ATTACH_FILE_ID = #{attachFileId}
+		<choose>
+			<when test='memo != "" and memo != null'>
+				AND MEMO = #{memo}
+			</when>
+		</choose>			
 	</delete>
 	
 	<!-- 첨부 파일 아이디에 해당하는 상세 정보 모두 삭제 -->
 	<delete id="deleteFileAll" parameterType="egovframework.com.file.vo.AttachFile">
 		DELETE FROM KSSA_ATTACH_FILE WHERE FILE_TARGET = #{fileTarget}
+		<choose>
+			<when test='memo != "" and memo != null'>
+				AND MEMO = #{memo}
+			</when>
+		</choose>			
 	</delete>
 	
 

@@ -837,6 +837,18 @@ public class MainController {
             
             // 파일 정보 생성
             fileService.insertFile(saveFiles);            
+        }else {
+        	AttachFile af = new AttachFile();
+        	af.setFileTarget(params.getSeqId());
+        	fileService.deleteFileAll(af);
+        	
+        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	
+        	if(fList!=null) {
+        		for(AttachFile fd : fList) {
+        			fileStorageService.deleteFile(fd);		
+        		}
+        	}      	
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
@@ -1227,6 +1239,7 @@ public class MainController {
 				
 	        	AttachFile af = new AttachFile();
 	        	af.setFileTarget(bs.getSeqId());
+	        	af.setMemo(params.getPath());
 	        	fileService.deleteFileAll(af);
 	        	
 	        	List<AttachFile> fList = fileService.selectFileAll(af);
@@ -1248,4 +1261,47 @@ public class MainController {
             throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
         }
     }          
+    
+    
+    /**
+     * deleteFile삭제
+     * 
+     * @param param
+     * @return Company
+     */
+    @PostMapping("/deleteFile.do")
+    @ApiOperation(value = "deleteFile", notes = "deleteFile삭제.")
+    @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
+    public BaseResponse<Integer> deleteFile(HttpServletRequest request, @RequestBody Board params) {
+		
+		if(StringUtils.isEmpty(params.getSeqId())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+		}			
+		
+		if(StringUtils.isEmpty(params.getAttachFileId())){				
+			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "AttachFileId" + BaseApiMessage.REQUIRED.getCode());
+		}				
+		
+		try {
+			
+			int result = 0;
+        	AttachFile af = new AttachFile();
+        	af.setAttachFileId(params.getAttachFileId());
+        	af.setMemo(params.getPath());
+        	af.setFileTarget(params.getSeqId());
+        	
+        	fileService.deleteFile(af);
+        	AttachFile fList = fileService.selectFile(af);
+   			fileStorageService.deleteFile(fList);		
+			
+			if(result>0) {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
+			}else {
+				return new BaseResponse<Integer>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage());
+			}
+        } catch (Exception e) {
+        	LOGGER.error("error:", e);
+            throw new BaseException(BaseResponseCode.UNKONWN_ERROR, e.getMessage());
+        }
+    }         
 }
