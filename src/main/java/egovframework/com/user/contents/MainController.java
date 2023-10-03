@@ -183,7 +183,7 @@ public class MainController {
     @ApiOperation(value = "공지사항등록", notes = "공지사항등록")
     public BaseResponse<Board> insertNotice(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
 		
@@ -213,18 +213,25 @@ public class MainController {
 		
         if (files != null) {
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+                saveFiles = new ArrayList<>();
+                // 파일 생성
+            	AttachFile detail = fileStorageService.createFile(file);
+            	detail.setInsertId(params.getInsertId());
+            	detail.setFileTarget(params.getSeqId());
+                if (detail != null) {
+                    detail.setFileSn(i++);
+                    detail.setMemo(params.getPath());
+                    saveFiles.add(detail);
+                }
+            	
+                // 파일 정보 생성
+                fileService.insertFile(saveFiles);	            	
             }
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
+            
         }
+        
+        
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
         Board resultDetail = mainService.selectNotice(params);
         resultDetail.setFileList(resultFile);
@@ -252,7 +259,7 @@ public class MainController {
     @ApiOperation(value = "공지사항수정", notes = "공지사항수정")
     public BaseResponse<Board> updateNotice(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
  
@@ -287,29 +294,31 @@ public class MainController {
         if (files != null) {
         	AttachFile af = new AttachFile();
         	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
+        	//fileService.deleteFileAll(af);
         	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	//List<AttachFile> fList = fileService.selectFileAll(af);
         	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}
+        	//if(fList!=null) {
+        		//for(AttachFile fd : fList) {
+        			//fileStorageService.deleteFile(fd);		
+        		//}
+        	//}         	
         	
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());            
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+	            saveFiles = new ArrayList<>();
+	            // 파일 생성
+	        	AttachFile detail = fileStorageService.createFile(file);
+	        	detail.setInsertId(params.getInsertId());
+	        	detail.setFileTarget(params.getSeqId());            
+	            if (detail != null) {
+	                detail.setFileSn(i++);
+	                saveFiles.add(detail);
+	            }
+	            
+	            // 파일 정보 생성
+	            fileService.insertFile(saveFiles);            
             }
-            
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
@@ -446,7 +455,7 @@ public class MainController {
     @ApiOperation(value = "FAQ등록", notes = "FAQ등록")
     public BaseResponse<Board> insertFAQ(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
 		
@@ -476,18 +485,24 @@ public class MainController {
 		
         if (files != null) {
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+                saveFiles = new ArrayList<>();
+                // 파일 생성
+            	AttachFile detail = fileStorageService.createFile(file);
+            	detail.setInsertId(params.getInsertId());
+            	detail.setFileTarget(params.getSeqId());
+                if (detail != null) {
+                    detail.setFileSn(i++);
+                    detail.setMemo(params.getPath());
+                    saveFiles.add(detail);
+                }
+            	
+                // 파일 정보 생성
+                fileService.insertFile(saveFiles);	            	
             }
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
+            
         }
+        
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
         Board resultDetail = mainService.selectFAQ(params);
         resultDetail.setFileList(resultFile);          
@@ -515,7 +530,7 @@ public class MainController {
     @ApiOperation(value = "FAQ수정", notes = "FAQ수정")
     public BaseResponse<Board> updateFAQ(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
  
@@ -550,29 +565,31 @@ public class MainController {
         if (files != null) {
         	AttachFile af = new AttachFile();
         	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
+        	//fileService.deleteFileAll(af);
         	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	//List<AttachFile> fList = fileService.selectFileAll(af);
         	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}
+        	//if(fList!=null) {
+        		//for(AttachFile fd : fList) {
+        			//fileStorageService.deleteFile(fd);		
+        		//}
+        	//}      	
         	
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());            
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+	            saveFiles = new ArrayList<>();
+	            // 파일 생성
+	        	AttachFile detail = fileStorageService.createFile(file);
+	        	detail.setInsertId(params.getInsertId());
+	        	detail.setFileTarget(params.getSeqId());            
+	            if (detail != null) {
+	                detail.setFileSn(i++);
+	                saveFiles.add(detail);
+	            }
+	            
+	            // 파일 정보 생성
+	            fileService.insertFile(saveFiles);            
             }
-            
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
@@ -710,7 +727,7 @@ public class MainController {
     @ApiOperation(value = "Info등록", notes = "Info등록")
     public BaseResponse<Board> insertInfo(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
 		
@@ -740,18 +757,24 @@ public class MainController {
 		
         if (files != null) {
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+                saveFiles = new ArrayList<>();
+                // 파일 생성
+            	AttachFile detail = fileStorageService.createFile(file);
+            	detail.setInsertId(params.getInsertId());
+            	detail.setFileTarget(params.getSeqId());
+                if (detail != null) {
+                    detail.setFileSn(i++);
+                    detail.setMemo(params.getPath());
+                    saveFiles.add(detail);
+                }
+            	
+                // 파일 정보 생성
+                fileService.insertFile(saveFiles);	            	
             }
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
+            
         }
+        
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
         Board resultDetail = mainService.selectInfo(params);
         resultDetail.setFileList(resultFile);           
@@ -779,7 +802,7 @@ public class MainController {
     @ApiOperation(value = "Info수정", notes = "Info수정")
     public BaseResponse<Board> updateInfo(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
  
@@ -814,41 +837,31 @@ public class MainController {
         if (files != null) {
         	AttachFile af = new AttachFile();
         	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
+        	//fileService.deleteFileAll(af);
         	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	//List<AttachFile> fList = fileService.selectFileAll(af);
         	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}
+        	//if(fList!=null) {
+        		//for(AttachFile fd : fList) {
+        			//fileStorageService.deleteFile(fd);		
+        		//}
+        	//}        	
         	
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());            
-            if (detail != null) {
-                detail.setFileSn(i++);
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+	            saveFiles = new ArrayList<>();
+	            // 파일 생성
+	        	AttachFile detail = fileStorageService.createFile(file);
+	        	detail.setInsertId(params.getInsertId());
+	        	detail.setFileTarget(params.getSeqId());            
+	            if (detail != null) {
+	                detail.setFileSn(i++);
+	                saveFiles.add(detail);
+	            }
+	            
+	            // 파일 정보 생성
+	            fileService.insertFile(saveFiles);            
             }
-            
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
-        }else {
-        	AttachFile af = new AttachFile();
-        	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
-        	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
-        	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}      	
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
@@ -1019,7 +1032,7 @@ public class MainController {
     @ApiOperation(value = "ReferenceRoom등록", notes = "ReferenceRoom등록")
     public BaseResponse<Board> insertReferenceRoom(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+            @RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
 		
@@ -1062,19 +1075,24 @@ public class MainController {
 		
         if (files != null) {
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());
-            if (detail != null) {
-                detail.setFileSn(i++);
-                detail.setMemo(params.getPath());
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+                saveFiles = new ArrayList<>();
+                // 파일 생성
+            	AttachFile detail = fileStorageService.createFile(file);
+            	detail.setInsertId(params.getInsertId());
+            	detail.setFileTarget(params.getSeqId());
+                if (detail != null) {
+                    detail.setFileSn(i++);
+                    detail.setMemo(params.getPath());
+                    saveFiles.add(detail);
+                }
+            	
+                // 파일 정보 생성
+                fileService.insertFile(saveFiles);	            	
             }
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
+            
         }
+        
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
 		Board resultDetail = new Board();
 		if(params.getPath().equals(REST_ROOM[0])) {
@@ -1110,7 +1128,7 @@ public class MainController {
     @ApiOperation(value = "ReferenceRoom수정", notes = "ReferenceRoom수정")
     public BaseResponse<Board> updateReferenceRoom(
     		HttpServletRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile files,
+    		@RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "params", required = true) Board params)
             throws Exception {
  
@@ -1157,30 +1175,32 @@ public class MainController {
         if (files != null) {
         	AttachFile af = new AttachFile();
         	af.setFileTarget(params.getSeqId());
-        	fileService.deleteFileAll(af);
+        	//fileService.deleteFileAll(af);
         	
-        	List<AttachFile> fList = fileService.selectFileAll(af);
+        	//List<AttachFile> fList = fileService.selectFileAll(af);
         	
-        	if(fList!=null) {
-        		for(AttachFile fd : fList) {
-        			fileStorageService.deleteFile(fd);		
-        		}
-        	}
+        	//if(fList!=null) {
+        		//for(AttachFile fd : fList) {
+        			//fileStorageService.deleteFile(fd);		
+        		//}
+        	//}        	
         	
         	int i = 1;
-            saveFiles = new ArrayList<>();
-            // 파일 생성
-        	AttachFile detail = fileStorageService.createFile(files);
-        	detail.setInsertId(params.getInsertId());
-        	detail.setFileTarget(params.getSeqId());            
-            if (detail != null) {
-                detail.setFileSn(i++);
-                detail.setMemo(params.getPath());
-                saveFiles.add(detail);
+            for (MultipartFile file : files) {
+	            saveFiles = new ArrayList<>();
+	            // 파일 생성
+	        	AttachFile detail = fileStorageService.createFile(file);
+	        	detail.setInsertId(params.getInsertId());
+	        	detail.setFileTarget(params.getSeqId());            
+	            if (detail != null) {
+	                detail.setFileSn(i++);
+	                detail.setMemo(params.getPath());
+	                saveFiles.add(detail);
+	            }
+	            
+	            // 파일 정보 생성
+	            fileService.insertFile(saveFiles);            
             }
-            
-            // 파일 정보 생성
-            fileService.insertFile(saveFiles);            
         }
         
         List<AttachFile> resultFile = saveFiles != null ? saveFiles : new ArrayList<AttachFile>();
@@ -1272,32 +1292,31 @@ public class MainController {
     @PostMapping("/deleteFile.do")
     @ApiOperation(value = "deleteFile", notes = "deleteFile삭제.")
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
-    public BaseResponse<Integer> deleteFile(HttpServletRequest request, @RequestBody Board params) {
+    public BaseResponse<List<AttachFile>> deleteFile(HttpServletRequest request, @RequestBody Board params) {
 		
 		if(StringUtils.isEmpty(params.getSeqId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
+			return new BaseResponse<List<AttachFile>>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
 		}			
 		
 		if(StringUtils.isEmpty(params.getAttachFileId())){				
-			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "AttachFileId" + BaseApiMessage.REQUIRED.getCode());
+			return new BaseResponse<List<AttachFile>>(BaseResponseCode.PARAMS_ERROR, "AttachFileId" + BaseApiMessage.REQUIRED.getCode());
 		}				
 		
 		try {
 			
-			int result = 0;
         	AttachFile af = new AttachFile();
         	af.setAttachFileId(params.getAttachFileId());
         	af.setMemo(params.getPath());
         	af.setFileTarget(params.getSeqId());
         	
-        	fileService.deleteFile(af);
-        	AttachFile fList = fileService.selectFile(af);
-   			fileStorageService.deleteFile(fList);		
-			
+        	int result = fileService.deleteFile(af);
+        	//AttachFile fList = fileService.selectFile(af);
+   			//fileStorageService.deleteFile(fList);		
+        	List<AttachFile> fList = fileService.selectFileAll(af);
 			if(result>0) {
-				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
+				return new BaseResponse<List<AttachFile>>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage(), fList);
 			}else {
-				return new BaseResponse<Integer>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage());
+				return new BaseResponse<List<AttachFile>>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage(), fList);
 			}
         } catch (Exception e) {
         	LOGGER.error("error:", e);
