@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.com.user.calendar.dao.CalendarDAO">
+	
+
+	<!-- 달력 가져오기 -->
+	<select id="selectCalendarList" parameterType="egovframework.com.user.calendar.vo.Calendar" resultType="egovframework.com.user.calendar.vo.Calendar">
+		SELECT 
+			SEQ_ID
+			,USER_ID
+			,CATEGORY
+			,TITLE
+			,CONTENTS
+			,EDU_START_DATE
+			,EDU_END_DATE
+			,INSERT_ID
+			,INSERT_DATE
+			,UPDATE_ID
+			,UPDATE_DATE	
+			,COMPANY		
+		FROM KSSA_CALENDAR_INFO
+		WHERE USER_ID = #{userId}
+		ORDER BY EDU_START_DATE ASC , EDU_END_DATE ASC 
+	</select>	
+	
+	<!-- 달력 상세 -->
+	<select id="selectCalendar" parameterType="egovframework.com.user.calendar.vo.Calendar" resultType="egovframework.com.user.calendar.vo.Calendar">
+		SELECT 
+			SEQ_ID
+			,USER_ID
+			,CATEGORY
+			,TITLE
+			,CONTENTS
+			,EDU_START_DATE
+			,EDU_END_DATE
+			,INSERT_ID
+			,INSERT_DATE
+			,UPDATE_ID
+			,UPDATE_DATE
+			,COMPANY			
+		FROM KSSA_CALENDAR_INFO
+		WHERE SEQ_ID = #{seqId}
+		AND USER_ID = #{userId}
+	</select>		
+	
+	<!-- 달력 등록 -->
+	<insert id="insertCalendar" parameterType="egovframework.com.user.calendar.vo.Calendar" useGeneratedKeys="true" keyProperty="seqId">
+		INSERT INTO KSSA_CALENDAR_INFO
+		(
+			USER_ID
+			,CATEGORY
+			,TITLE
+			,CONTENTS
+			,EDU_START_DATE
+			,EDU_END_DATE
+			,INSERT_ID
+			,INSERT_DATE
+			,COMPANY
+		)
+		VALUES(
+			#{userId}
+			,#{category}
+			,#{title}
+			,#{contents}
+			,#{eduStartDate}
+			,#{eduEndDate}
+			,#{insertId}
+			,now()
+			,#{company}
+		)	
+	</insert>	
+	
+	
+	<!-- 달력 수정 -->
+	<update id="updateCalendar" parameterType="egovframework.com.user.calendar.vo.Calendar">	
+		UPDATE KSSA_CALENDAR_INFO
+		SET 
+			CATEGORY = #{category},
+			TITLE = #{title},
+			CONTENTS = #{contents},
+			EDU_START_DATE = #{eduStartDate},
+			EDU_END_DATE = #{eduEndDate},
+			COMPANY = #{company},
+			UPDATE_ID = #{updateId},
+			UPDATE_DATE = now()
+		WHERE SEQ_ID = #{seqId} 
+	</update>	
+	
+	
+	<!-- 달력 삭제-->
+	<delete id="deleteCalendar" parameterType="egovframework.com.user.calendar.vo.Calendar">
+		DELETE FROM KSSA_CALENDAR_INFO WHERE SEQ_ID = #{seqId}  
+	</delete>	
+	
+	
+</mapper>

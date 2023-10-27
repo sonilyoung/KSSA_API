@@ -16,7 +16,10 @@
 			LAST_LOGIN,
 			USE_YN,
 			REG_ID,
-			REG_DT
+			REG_DT,
+			TEL_NO,
+			COMPANY,
+			DEPT
 		FROM
 			KSSA_USER                                      								 
 		WHERE USER_ID = #{userId}

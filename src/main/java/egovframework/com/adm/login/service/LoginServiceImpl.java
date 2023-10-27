@@ -135,7 +135,10 @@ public class LoginServiceImpl implements LoginService {
                 + login.getLastLogin() + "|"
                 + login.getUseYn() + "|"
                 + login.getRegId() + "|"
-                + login.getRegDt();
+                + login.getRegDt() + "|"
+                + login.getTelNo() + "|"
+                + login.getCompany() + "|"
+                + login.getDept();
         return str;
     }
 
@@ -148,11 +151,14 @@ public class LoginServiceImpl implements LoginService {
         login.setUserPw(strSplit[3]);
         login.setAuthCd(strSplit[4]);
         login.setHpNo(strSplit[5]);
-        login.setFirstLogin(strSplit[8]);
-        login.setLastLogin(strSplit[9]);
-        login.setUseYn(strSplit[14]);
-        login.setRegId(strSplit[15]);
-        login.setRegDt(strSplit[16]);
+        login.setFirstLogin(strSplit[6]);
+        login.setLastLogin(strSplit[7]);
+        login.setUseYn(strSplit[8]);
+        login.setRegId(strSplit[9]);
+        login.setRegDt(strSplit[10]);
+        login.setTelNo(strSplit[11]);
+        login.setCompany(strSplit[12]);
+        login.setDept(strSplit[13]);
         return login;
     }
 

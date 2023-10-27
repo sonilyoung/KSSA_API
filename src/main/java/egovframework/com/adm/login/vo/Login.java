@@ -21,4 +21,7 @@ public class Login implements Serializable {
     private String useYn;                      //사용여부        
     private String regId;                      //등록자        
     private String regDt;                      //등록일시        
+    private String company;                      //회사        
+    private String telNo;                      //전화번호        
+    private String dept;                      //부서        
 }
