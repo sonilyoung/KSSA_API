@@ -65,6 +65,7 @@ public class CalendarController {
     @ApiOperation(value = "달력", notes = "달력목록조회.")
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<List<Calendar>> selectCalendarList(HttpServletRequest request, @RequestBody Calendar params) {
+    	/*
     	Login login = loginService.getLoginInfo(request);
 		if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
@@ -72,7 +73,8 @@ public class CalendarController {
 			params.setUserId(login.getUserId());
 			params.setInsertId(login.getUserId());
 			params.setCompany(login.getCompany());
-		}  
+		}
+		*/  
 		
 		try {
 			//달력조회
@@ -94,6 +96,7 @@ public class CalendarController {
     @ApiOperation(value = "달력상세", notes = "달력상세조회.")
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<Calendar> selectCalendar(HttpServletRequest request, @RequestBody Calendar params) {
+    	/*
     	Login login = loginService.getLoginInfo(request);
 		if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
@@ -101,7 +104,7 @@ public class CalendarController {
 			params.setUserId(login.getUserId());
 			params.setInsertId(login.getUserId());
 			params.setCompany(login.getCompany());
-		}  		
+		}*/  		
     	
 		if(StringUtils.isEmpty(params.getSeqId())){				
 			return new BaseResponse<Calendar>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
@@ -132,7 +135,7 @@ public class CalendarController {
     @ApiOperation(value = "달력등록", notes = "달력등록")
     public BaseResponse<Calendar> insertCalendar(
     		HttpServletRequest request, @RequestBody Calendar params)throws Exception {
-		
+		/*
     	Login login = loginService.getLoginInfo(request);
 		if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
@@ -140,7 +143,7 @@ public class CalendarController {
 			params.setUserId(login.getUserId());
 			params.setInsertId(login.getUserId());
 			params.setCompany(login.getCompany());
-		}    	
+		}*/    	
 		
 		if(StringUtils.isEmpty(params.getCategory())){				
 			return new BaseResponse<Calendar>(BaseResponseCode.PARAMS_ERROR, "Category" + BaseApiMessage.REQUIRED.getCode());
@@ -191,13 +194,13 @@ public class CalendarController {
     		HttpServletRequest request,@RequestBody  Calendar params)
             throws Exception {
     	Login login = loginService.getLoginInfo(request);
-		if (login == null) {
+    	/*if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
 		}else {
 			params.setUserId(login.getUserId());
 			params.setInsertId(login.getUserId());
 			params.setCompany(login.getCompany());
-		}    	
+		}*/       	
     	
 		if(StringUtils.isEmpty(params.getSeqId())){				
 			return new BaseResponse<Calendar>(BaseResponseCode.PARAMS_ERROR, "SeqId" + BaseApiMessage.REQUIRED.getCode());
@@ -232,6 +235,7 @@ public class CalendarController {
     @ApiOperation(value = "달력", notes = "달력삭제.")
     @SkipAuth(skipAuthLevel = SkipAuthLevel.SKIP_ALL)
     public BaseResponse<Integer> deleteCalendar(HttpServletRequest request, @RequestBody Calendar params) {
+    	/*
     	Login login = loginService.getLoginInfo(request);
 		if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
@@ -239,7 +243,7 @@ public class CalendarController {
 			params.setUserId(login.getUserId());
 			params.setInsertId(login.getUserId());
 			params.setCompany(login.getCompany());
-		}  
+		}*/     
 		
 		if(StringUtils.isEmpty(params.getSeqIdList())){				
 			return new BaseResponse<Integer>(BaseResponseCode.PARAMS_ERROR, "SeqIdList" + BaseApiMessage.REQUIRED.getCode());

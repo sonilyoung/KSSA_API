@@ -19,7 +19,7 @@
 			,UPDATE_DATE	
 			,COMPANY		
 		FROM KSSA_CALENDAR_INFO
-		WHERE USER_ID = #{userId}
+		<!-- WHERE USER_ID = #{userId}-->
 		ORDER BY EDU_START_DATE ASC , EDU_END_DATE ASC 
 	</select>	
 	
@@ -40,7 +40,7 @@
 			,COMPANY			
 		FROM KSSA_CALENDAR_INFO
 		WHERE SEQ_ID = #{seqId}
-		AND USER_ID = #{userId}
+		<!-- AND USER_ID = #{userId}-->
 	</select>		
 	
 	<!-- 달력 등록 -->
