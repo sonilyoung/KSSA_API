@@ -193,7 +193,7 @@ public class CalendarController {
     public BaseResponse<Calendar> updateCalendar(
     		HttpServletRequest request,@RequestBody  Calendar params)
             throws Exception {
-    	Login login = loginService.getLoginInfo(request);
+    	//Login login = loginService.getLoginInfo(request);
     	/*if (login == null) {
 			throw new BaseException(BaseResponseCode.AUTH_FAIL);
 		}else {
@@ -250,7 +250,13 @@ public class CalendarController {
 		}				
 		
 		try {
-			int result = calendarService.deleteCalendar(params);		
+			int result = 0;
+			for(Long s : params.getSeqIdList()) {
+				Calendar seqId = new Calendar();
+				seqId.setSeqId(s);
+				calendarService.deleteCalendar(seqId);		
+			}
+			
 			if(result>0) {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
 			}else {
