@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Calendar{
 
-	private String seqId;
+	private Long seqId;
 	private String userId;
 	private String category;
 	private String title;
