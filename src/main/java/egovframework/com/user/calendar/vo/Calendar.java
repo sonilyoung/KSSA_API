@@ -10,6 +10,7 @@ public class Calendar{
 	private Long seqId;
 	private String userId;
 	private String category;
+	private String division;
 	private String title;
 	private String contents;
 	private String eduStartDate;
@@ -19,6 +20,8 @@ public class Calendar{
 	private String updateId;
 	private String updateDate;
 	private String company;
+	private int studentCnt;
+	private int applyStudentCnt;
 	
 	List<Long> seqIdList;	
 	

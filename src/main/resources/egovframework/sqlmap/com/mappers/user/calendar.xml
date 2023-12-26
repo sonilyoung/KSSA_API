@@ -9,6 +9,9 @@
 			SEQ_ID
 			,USER_ID
 			,CATEGORY
+			,DIVISION
+			,STUDENT_CNT
+			,APPLY_STUDENT_CNT
 			,TITLE
 			,CONTENTS
 			,EDU_START_DATE
@@ -29,6 +32,9 @@
 			SEQ_ID
 			,USER_ID
 			,CATEGORY
+			,DIVISION
+			,STUDENT_CNT
+			,APPLY_STUDENT_CNT
 			,TITLE
 			,CONTENTS
 			,EDU_START_DATE
@@ -49,6 +55,9 @@
 		(
 			USER_ID
 			,CATEGORY
+			,DIVISION
+			,STUDENT_CNT
+			,APPLY_STUDENT_CNT
 			,TITLE
 			,CONTENTS
 			,EDU_START_DATE
@@ -60,6 +69,9 @@
 		VALUES(
 			#{userId}
 			,#{category}
+			,#{division}
+			,#{studentCnt}
+			,#{applyStudentCnt}
 			,#{title}
 			,#{contents}
 			,#{eduStartDate}
@@ -76,6 +88,9 @@
 		UPDATE KSSA_CALENDAR_INFO
 		SET 
 			CATEGORY = #{category},
+			DIVISION = #{division},
+			STUDENT_CNT = #{studentCnt},
+			APPLY_STUDENT_CNT = #{applyStudentCnt},
 			TITLE = #{title},
 			CONTENTS = #{contents},
 			EDU_START_DATE = #{eduStartDate},

@@ -51,6 +51,8 @@ public class CalendarServiceImpl implements CalendarService {
 	@Override
 	public int updateCalendar(Calendar params) {
 		// TODO Auto-generated method stub
+		
+		params.setStudentCnt(params.getStudentCnt() - params.getApplyStudentCnt()); 
 		return calendarDAO.updateCalendar(params);
 	}
 	

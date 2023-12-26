@@ -254,10 +254,10 @@ public class CalendarController {
 			for(Long s : params.getSeqIdList()) {
 				Calendar seqId = new Calendar();
 				seqId.setSeqId(s);
-				calendarService.deleteCalendar(seqId);		
+				result = calendarService.deleteCalendar(seqId);		
 			}
 			
-			if(result>0) {
+			if(result > 0) {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_SUCCESS, BaseResponseCode.DELETE_SUCCESS.getMessage());
 			}else {
 				return new BaseResponse<Integer>(BaseResponseCode.DELETE_ERROR, BaseResponseCode.DELETE_ERROR.getMessage());
